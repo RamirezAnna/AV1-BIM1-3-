@@ -29,13 +29,14 @@ Como rodar:
 npm install
 ```
 
-2. Rodar em modo de desenvolvimento (nodemon):
+
+2. Rodar (apenas Node):
 
 ```powershell
 npm run dev
 ```
 
-3. Rodar com o script de produção:
+3. Alternativa (igual ao anterior):
 
 ```powershell
 npm start
