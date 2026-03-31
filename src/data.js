@@ -26,6 +26,29 @@ export function addTaskToProject(id, task) {
   return project;
 }
 
+export function updateProject(id, data) {
+  const project = projects.find(p => p.id === id);
+  if (!project) return null;
+
+  if (data.title !== undefined) {
+    project.title = String(data.title).trim();
+  }
+
+  if (data.description !== undefined) {
+    project.description = String(data.description).trim();
+  }
+
+  return project;
+}
+
+export function deleteProject(id) {
+  const index = projects.findIndex(p => p.id === id);
+  if (index === -1) return false;
+
+  projects.splice(index, 1);
+  return true;
+}
+
 // For testing/reset purposes (not exported by default)
 export function _resetData() {
   projects = [

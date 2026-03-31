@@ -1,6 +1,12 @@
 import express from 'express';
-import { getAllProjects, findProjectById, createProject, addTaskToProject } from './data.js';
-
+import { 
+  getAllProjects, 
+  findProjectById, 
+  createProject, 
+  addTaskToProject,
+  updateProject,
+  deleteProject
+} from './data.js';
 const app = express();
 app.use(express.json());
 
@@ -47,9 +53,44 @@ app.post('/projects/:id/tasks', (req, res) => {
   return res.status(201).json(updated);
 });
 
-export default app;
+// PUT /projects/:id -> atualizar
+app.put('/projects/:id', (req, res) => {
+  const id = Number(req.params.id);
 
-if (process.env.NODE_ENV !== 'test') {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-}
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'ID inválido' });
+  }
+
+  const { title, description } = req.body || {};
+
+  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+    return res.status(400).json({ error: 'title inválido.' });
+  }
+
+  const updated = updateProject(id, { title, description });
+
+  if (!updated) {
+    return res.status(404).json({ error: 'Projeto não encontrado' });
+  }
+
+  return res.status(200).json(updated);
+});
+
+// DELETE /projects/:id -> remover
+app.delete('/projects/:id', (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'ID inválido' });
+  }
+
+  const deleted = deleteProject(id);
+
+  if (!deleted) {
+    return res.status(404).json({ error: 'Projeto não encontrado' });
+  }
+
+  return res.status(204).send(); // sem conteúdo
+});
+
+export default app;
